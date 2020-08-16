@@ -1,7 +1,7 @@
 # Разбивает текст на набор блоков
 
 class BlockParser:
-    def __init__(self, block_size, encoding):
+    def __init__(self, block_size=8, encoding='utf-8'):
         """
         :param block_size: размер блока в байтах
         :param encoding: кодировка входных/выходных строк. Пока доступна только utf-8
@@ -15,12 +15,13 @@ class BlockParser:
 
     def parse_line(self, line):
         """
-        преобразует строку в набор блоков размером в block_size байт и добавляет набор в список __result
+        преобразует строку в набор блоков размером в block_size байт и добавляет набор в список __result,
+        в процессе удаляет из нее плавающие пробелы(\n,\t и т.п.)
         :param line: преобразуемая строка
         :return:
         """
         # представление строки в байтовом виде
-        byte_string = bytearray(line, self.__encoding)
+        byte_string = bytearray(line.rstrip(), self.__encoding)
         # размер строки в байтах
         string_size = len(byte_string)
         # количество полных блоков и количество байтов в последнем если он неполный
@@ -55,7 +56,7 @@ class BlockParser:
         """
         достает строчки из аттрибутов __result и __added_bytes по принципу FIFO
         и удаляет их оттуда, преобразуя в читаемый вид
-        :return: получаемая строка, если __result - пустой списко, то возвращается пустая строка
+        :return: получаемая строка, если __result - пустой список, то возвращается None
         """
         if len(self.__result) > 0:
             # получение первых элементов списков - аттрибутов
@@ -72,7 +73,7 @@ class BlockParser:
             return full_string.decode(self.__encoding)
 
         else:
-            return str()
+            return None
 
     # заполняет данные о блоках и добавленных в них байтах
     def load_lines(self, lines_list, bytes_list):
@@ -83,6 +84,9 @@ class BlockParser:
     def clear_results(self):
         self.__result = list()
         self.__added_bytes = list()
+
+    def replace_block(self, line_num, block_num, block):
+        self.__result[line_num][block_num] = block.copy()
 
 
 if __name__ == '__main__':
