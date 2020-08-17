@@ -35,8 +35,10 @@ class Encryptor:
 
 if __name__ == '__main__':
     e_test = Encryptor('test')
-    test_block = e_test.encrypt_decrypt_block(b'testtest')
-    print(test_block)
+    test_block = e_test.encrypt_decrypt_block(b'testtes\n')
+    test_block2 = e_test.encrypt_decrypt_block(b'kekew  \n')
+    print(test_block + test_block2)
     e_test.drop_key_pointer()
-    test_block2 = e_test.encrypt_decrypt_block(test_block)
-    print(test_block2)
+    test_block3 = e_test.encrypt_decrypt_block(test_block)
+    test_block4 = e_test.encrypt_decrypt_block(test_block2)
+    print(test_block3 + test_block4)
